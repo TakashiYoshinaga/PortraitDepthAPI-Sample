@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <!-- Require the peer dependencies of depth-estimation. -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+  <!-- You must explicitly require a TF.js backend if you're not using the TF.js union bundle. -->
+  <!-- WebGL is the recommended backend. -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-segmentation"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/depth-estimation"></script>
+
+  <!--今回のハンズオンで行う処理を記述-->
+  <script type="text/javascript">
+    let canvasElement;
+    let canvasCtx;
+    var canvasPlace;
+    let beam;
+    let ell;
+    let ratio;
+    var estimator;
+    var videoElement;
+    //初期化
+    window.onload = function() {
+      //画像の読み込み
+      beam = document.getElementById("beam");
+      //ビデオ要素の取得
+      videoElement = document.getElementById('input_video');
+      //表示用のCanvasを取得
+      canvasElement = document.getElementById('output_canvas');
+      //Canvas描画に関する情報にアクセス
+      canvasCtx = canvasElement.getContext('2d');
+      canvasPlace=document.getElementById('hoge');
+      navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false,
+        }).then(stream => {
+            videoElement.srcObject = stream;
+            videoElement.play()
+        }).catch(e => {
+          console.log(e)
+        })
+      
+      //HandTrackingを使用するための関連ファイルの取得と初期化
+      
+     sample();
+     //recvResults() ; 
+    };
+    
+    async function sample() {
+      
+      let width=640;//results.image.width;
+      let height=480;//results.image.height;
+      //画像のサイズとcanvasのサイズが異なる場合はサイズを調整
+      if(width!=canvasElement.width){
+        //入力画像と同じサイズのcanvas(描画領域)を用意
+        canvasElement.width=width;
+        canvasElement.height=height;
+      }
+      
+       const model = depthEstimation.SupportedModels.ARPortraitDepth;
+      estimator = await depthEstimation.createEstimator(model);
+         const estimationConfig = {
+      minDepth: 0, // The minimum depth value outputted by the estimator.
+      maxDepth: 1, // The maximum depth value outputted by the estimator.
+    };
+
+      
+      
+   
+      
+      setInterval( async function(){
+        const depthMap = await estimator.estimateDepth(videoElement, estimationConfig);
+       // console.log("hoge");
+          var hoge=await depthMap.toCanvasImageSource();
+      var hogectx=hoge.getContext('2d');
+      let imageData = hogectx.getImageData(0, 0, 640, 480);
+      canvasCtx .putImageData(imageData, 0, 0);
+    },100);
+      
+    
+    
+    }
+    
+    //手の検出結果を利用する
+    function recvResults() {     
+      let width=640;//results.image.width;
+      let height=480;//results.image.height;
+      //画像のサイズとcanvasのサイズが異なる場合はサイズを調整
+      if(width!=canvasElement.width){
+        //入力画像と同じサイズのcanvas(描画領域)を用意
+        canvasElement.width=width;
+        canvasElement.height=height;
+      }
+      //以下、canvasへの描画に関する記述
+      //canvasCtx.save();
+      //画像を表示
+     // canvasCtx.drawImage(results.image, 0, 0, width, height); 
+      //手を検出したならばtrue
+        
+      //canvasCtx.restore();         
+    }
+    
+  </script>
+</head>
+
+<body>
+    <video id="input_video" style="position:absolute; display:none; "></video>
+    <canvas id="output_canvas" style="position:absolute;"></canvas>
+  <div id="hoge">
+    
+  </div>
+</body>
+</html>
+
+
