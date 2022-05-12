@@ -26,7 +26,7 @@
       //Canvas描画に関する情報にアクセス
       canvasCtx = canvasElement.getContext('2d');
       
-      navigator.mediaDevices.getUserMedia({
+      await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: false,
       }).then(stream => {
