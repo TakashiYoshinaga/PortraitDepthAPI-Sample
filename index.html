@@ -16,7 +16,6 @@
   <script type="text/javascript">
     let canvasElement;
     let canvasCtx;
-    var canvasPlace;
     var estimator;
     var videoElement;
     var estimationConfig;
@@ -28,7 +27,7 @@
       canvasElement = document.getElementById('output_canvas');
       //Canvas描画に関する情報にアクセス
       canvasCtx = canvasElement.getContext('2d');
-      canvasPlace=document.getElementById('hoge');
+     
       
       navigator.mediaDevices.getUserMedia({
         video: true,
@@ -67,14 +66,14 @@
       canvasCtx .putImageData(imageData, 0, 0);
       setTimeout(loop,10);
     }
-  
-    
   </script>
 </head>
 
 <body>
-    <video id="input_video" style="position:absolute; display:none; "></video>
-    <canvas id="output_canvas" style="position:absolute;"></canvas>
+  <div style="display:flex;">
+    <video id="input_video" ></video>
+    <canvas id="output_canvas"></canvas>
+  </div>
  </body>
 </html>
 
