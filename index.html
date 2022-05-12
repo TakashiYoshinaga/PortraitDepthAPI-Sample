@@ -27,11 +27,19 @@
       canvasElement = document.getElementById('output_canvas');
       //Canvas描画に関する情報にアクセス
       canvasCtx = canvasElement.getContext('2d');
+           
+      const constraints = {
+        video: {
+          width: {
+            ideal: 320,
+          },
+          height: {
+            ideal: 240,
+          },
+        }
+      };
       
-      await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: false,
-      }).then(stream => {
+      await navigator.mediaDevices.getUserMedia(constraints).then(stream => {
         videoElement.srcObject = stream;
         videoElement.play()
       }).catch(e => {
@@ -48,7 +56,6 @@
       loop();
     };
     
-
     async function loop(){
       let width=videoElement.videoWidth;
       let height=videoElement.videoHeight;//results.image.height;
@@ -63,7 +70,8 @@
       var depthCtx=depthCanvas.getContext('2d');
       var imageData = depthCtx.getImageData(0, 0, width, height);
       canvasCtx .putImageData(imageData, 0, 0);
-      setTimeout(loop,10);
+         
+      setTimeout(loop,30);
     }
   
   </script>
