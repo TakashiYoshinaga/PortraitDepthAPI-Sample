@@ -14,7 +14,7 @@
 
   <!--今回のハンズオンで行う処理を記述-->
   <script type="text/javascript">
-    let canvasElement;
+     let canvasElement;
     let canvasCtx;
     var estimator;
     var videoElement;
@@ -27,7 +27,6 @@
       canvasElement = document.getElementById('output_canvas');
       //Canvas描画に関する情報にアクセス
       canvasCtx = canvasElement.getContext('2d');
-     
       
       navigator.mediaDevices.getUserMedia({
         video: true,
@@ -66,6 +65,7 @@
       canvasCtx .putImageData(imageData, 0, 0);
       setTimeout(loop,10);
     }
+  
   </script>
 </head>
 
@@ -76,5 +76,6 @@
   </div>
  </body>
 </html>
+
 
 
