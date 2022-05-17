@@ -60,30 +60,33 @@
       let width=videoElement.videoWidth;
       let height=videoElement.videoHeight;//results.image.height;
       //画像のサイズとcanvasのサイズが異なる場合はサイズを調整
-      if(width!=canvasElement.width){
+      if(width*2!=canvasElement.width){
         //入力画像と同じサイズのcanvas(描画領域)を用意
-        canvasElement.width=width;
+        canvasElement.width=width*2;
         canvasElement.height=height;
       }
       var depthMap = await estimator.estimateDepth(videoElement, estimationConfig);
       var depthCanvas=await depthMap.toCanvasImageSource();
       var depthCtx=depthCanvas.getContext('2d');
       var imageData = depthCtx.getImageData(0, 0, width, height);
-      canvasCtx .putImageData(imageData, 0, 0);
-         
+      canvasCtx.putImageData(imageData, 0, 0);
+      canvasCtx.drawImage(videoElement, width, 0, width, height);
       setTimeout(loop,30);
     }
-  
+  function downloadCanvas() {
+    let link = document.getElementById('hiddenLink');
+    link.href = canvasElement.toDataURL();
+    link.click()
+  }
   </script>
 </head>
 
 <body>
   <div style="display:flex;">
-    <video id="input_video" ></video>
-    <canvas id="output_canvas"></canvas>
+    <video id="input_video" style="display:none;" ></video>
+    <canvas id="output_canvas"></canvas>  
   </div>
+  <button onclick="downloadCanvas()">Download Image</button>
+  <a id="hiddenLink" download="canvas.png"></a>
  </body>
 </html>
-
-
-
